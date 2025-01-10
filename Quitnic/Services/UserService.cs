@@ -25,10 +25,7 @@ namespace Quitnic.Services
 
         public async Task<User> CreateUserAsync(User user)
         {
-            // Business logic (e.g., email uniqueness validation)
-            user.Id = Guid.NewGuid();
-            await _repository.CreateUserAsync(user);
-            return user;
+            return await _repository.CreateUserAsync(user);
         }
     }
 }

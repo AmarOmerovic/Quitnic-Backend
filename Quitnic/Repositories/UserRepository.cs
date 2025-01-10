@@ -6,7 +6,7 @@ namespace Quitnic.Repositories
     public interface IUserRepository
     {
         Task<User?> GetUserByIdAsync(Guid id);
-        Task CreateUserAsync(User user);
+        Task<User> CreateUserAsync(User user);
     }
 
     public class UserRepository : IUserRepository
@@ -23,10 +23,11 @@ namespace Quitnic.Repositories
             return await _context.User.FindAsync(id);
         }
 
-        public async Task CreateUserAsync(User user)
+        public async Task<User> CreateUserAsync(User user)
         {
             _context.User.Add(user);
             await _context.SaveChangesAsync();
+            return user; 
         }
     }
 }
