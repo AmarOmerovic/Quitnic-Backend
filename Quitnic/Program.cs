@@ -15,6 +15,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+// Register UserSmokeHistoryRepository and UserSmokeHistoryService for Dependency Injection
+builder.Services.AddScoped<IUserSmokeHistoryRepository, UserSmokeHistoryRepository>();
+builder.Services.AddScoped<IUserSmokeHistoryService, UserSmokeHistoryService>();
 // Configure CORS
 builder.Services.AddCors(options =>
 {
