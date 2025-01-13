@@ -1,6 +1,7 @@
 ﻿namespace Quitnic.Data
 {
     using Microsoft.EntityFrameworkCore;
+    using Quitnic.Models;
 
     public class AppDbContext : DbContext
     {
@@ -8,5 +9,6 @@
 
         public DbSet<Models.User> User { get; set; }
         public DbSet<Models.UserSmokeHistory> UserSmokeHistory { get; set; }
+        public DbSet<MotivationTip> MotivationTip { get; set; } 
     }
 }
