@@ -18,6 +18,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 // Register UserSmokeHistoryRepository and UserSmokeHistoryService for Dependency Injection
 builder.Services.AddScoped<IUserSmokeHistoryRepository, UserSmokeHistoryRepository>();
 builder.Services.AddScoped<IUserSmokeHistoryService, UserSmokeHistoryService>();
+
+// Register MotivationTipRepository and MotivationTipService for Dependency Injection
+builder.Services.AddScoped<IMotivationTipRepository, MotivationTipRepository>();
+builder.Services.AddScoped<IMotivationTipService, MotivationTipService>();
+
 // Configure CORS
 builder.Services.AddCors(options =>
 {
