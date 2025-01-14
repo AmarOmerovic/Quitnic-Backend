@@ -9,6 +9,8 @@
 
         public DbSet<Models.User> User { get; set; }
         public DbSet<Models.UserSmokeHistory> UserSmokeHistory { get; set; }
-        public DbSet<MotivationTip> MotivationTip { get; set; } 
+        public DbSet<MotivationTip> MotivationTip { get; set; }
+        public DbSet<Achievement> Achievement { get; set; }
+        public DbSet<UserAchievement> UserAchievement { get; set; }
     }
 }

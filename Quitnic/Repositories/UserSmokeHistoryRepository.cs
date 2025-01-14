@@ -42,6 +42,5 @@ namespace Quitnic.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-
     }
 }
