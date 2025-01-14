@@ -23,6 +23,13 @@ builder.Services.AddScoped<IUserSmokeHistoryService, UserSmokeHistoryService>();
 builder.Services.AddScoped<IMotivationTipRepository, MotivationTipRepository>();
 builder.Services.AddScoped<IMotivationTipService, MotivationTipService>();
 
+// Register AchievementRepository and AchievementService for Dependency Injection
+builder.Services.AddScoped<IAchievementRepository, AchievementRepository>();
+builder.Services.AddScoped<IAchievementService, AchievementService>();
+
+// Register UserAchievementRepository for Dependency Injection
+builder.Services.AddScoped<IUserAchievementRepository, UserAchievementRepository>();
+
 // Configure CORS
 builder.Services.AddCors(options =>
 {
