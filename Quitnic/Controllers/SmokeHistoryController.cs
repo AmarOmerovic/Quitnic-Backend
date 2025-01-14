@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Quitnic.Models;
-using Quitnic.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Quitnic.Models.UserSmokeHistory;
+using Quitnic.Services.UserSmokeHistory;
 
 namespace Quitnic.Controllers
 {
     [ApiController]
     [Route("api/smoke-history")]
+    [Authorize]
     public class SmokeHistoryController : ControllerBase
     {
         private readonly IUserSmokeHistoryService _service;
@@ -15,39 +17,63 @@ namespace Quitnic.Controllers
             _service = service;
         }
 
-        // GET: /api/smoke-history/{userId}
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetSmokeHistory(Guid userId)
         {
-            var history = await _service.GetSmokeHistoryByUserIdAsync(userId);
-
-            if (history == null)
+            try
             {
-                return NotFound(new { message = "Smoke history not found." });
-            }
+                var history = await _service.GetSmokeHistoryByUserIdAsync(userId);
 
-            return Ok(history);
-        }
-
-        // PUT: /api/smoke-history/{userId}
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateSmokeHistory(Guid userId, [FromBody] UserSmokeHistory updatedHistory)
-        {
-            if (updatedHistory.UserId != Guid.Empty) return StatusCode(400, new { message = "UserId should not be passed in the body." });
-
-            var result = await _service.UpdateSmokeHistoryAsync(userId, updatedHistory);
-
-            if (result)
-            {
-                return Ok(new
+                if (history == null)
                 {
-                    message = "Smoke history created or updated successfully.",
-                    cigarettesPerDay = updatedHistory.CigarettesPerDay
-                });
-            }
+                    return NotFound(new { message = "Smoke history not found." });
+                }
 
-            return StatusCode(500, new { message = "An error occurred while updating smoke history." });
+                return Ok(history);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+            }
         }
 
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> UpdateSmokeHistory(Guid userId, [FromBody] UserSmokeHistoryModel updatedHistory)
+        {
+            try
+            {
+                if (userId == Guid.Empty)
+                {
+                    return BadRequest(new { message = "Invalid user ID." });
+                }
+
+                if (updatedHistory == null)
+                {
+                    return BadRequest(new { message = "Request body cannot be null." });
+                }
+
+                if (updatedHistory.UserId != Guid.Empty)
+                {
+                    return BadRequest(new { message = "UserId should not be included in the request body." });
+                }
+
+                var result = await _service.UpdateSmokeHistoryAsync(userId, updatedHistory);
+
+                if (result)
+                {
+                    return Ok(new
+                    {
+                        message = "Smoke history created or updated successfully.",
+                        cigarettesPerDay = updatedHistory.CigarettesPerDay
+                    });
+                }
+
+                return StatusCode(500, new { message = "An error occurred while updating smoke history." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+            }
+        }
     }
 }

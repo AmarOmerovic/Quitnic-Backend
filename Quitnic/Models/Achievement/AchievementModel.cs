@@ -1,6 +1,6 @@
-﻿namespace Quitnic.Models
+﻿namespace Quitnic.Models.Achievement
 {
-    public class Achievement
+    public class AchievementModel
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public required string Title { get; set; }

@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Quitnic.Data;
-using Quitnic.Models;
-using Quitnic.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Quitnic.Models.User;
+using Quitnic.Services.User;
 
 namespace Quitnic.Controllers
 {
     [ApiController]
     [Route("api/user")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _service;
@@ -19,24 +20,44 @@ namespace Quitnic.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
-            var user = await _service.GetUserByIdAsync(id);
-            if (user == null)
+            try
             {
-                return NotFound(new { message = "User not found" });
+                var user = await _service.GetUserByIdAsync(id);
+                if (user == null)
+                {
+                    return NotFound(new { message = "User not found." });
+                }
+                return Ok(user);
             }
-            return Ok(user);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] User user)
+        public async Task<IActionResult> CreateUser([FromBody] UserModel user)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new { message = "Invalid input data.", errors = ModelState });
+                }
 
-            var createdUser = await _service.CreateUserAsync(user);
-            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
+                if (string.IsNullOrWhiteSpace(user.Email))
+                {
+                    return BadRequest(new { message = "Email is required." });
+                }
+
+                var createdUser = await _service.CreateUserAsync(user);
+                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred.", details = ex.Message });
+            }
         }
     }
+
 }

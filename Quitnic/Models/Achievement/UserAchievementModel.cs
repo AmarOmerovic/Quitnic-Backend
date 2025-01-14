@@ -1,14 +1,11 @@
-﻿namespace Quitnic.Models
+﻿namespace Quitnic.Models.Achievement
 {
-    public class UserAchievement
+    public class UserAchievementModel
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public required Guid UserId { get; set; }
         public required Guid AchievementId { get; set; }
         public DateTime UnlockedAt { get; set; } = DateTime.UtcNow;
-
-        // Navigation Properties
-        public User User { get; set; } = null!;
-        public Achievement Achievement { get; set; } = null!;
+        public AchievementModel Achievement { get; set; } = null!;
     }
 }

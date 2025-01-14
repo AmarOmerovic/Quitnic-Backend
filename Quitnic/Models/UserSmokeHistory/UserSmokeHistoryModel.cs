@@ -1,6 +1,6 @@
-﻿namespace Quitnic.Models
+﻿namespace Quitnic.Models.UserSmokeHistory
 {
-    public class UserSmokeHistory
+    public class UserSmokeHistoryModel
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public Guid UserId { get; set; }
