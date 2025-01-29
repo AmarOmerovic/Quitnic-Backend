@@ -37,10 +37,9 @@ namespace Quitnic.Services.Achievement
                 throw new InvalidOperationException("User smoke history not found.");
             }
 
-            var userProgress = QuitnicHelper.Calculate(smokeHistory);
+            var userProgress = QuitnicHelper.Instance.Calculate(smokeHistory);
 
-            // Process achievements concurrently
-            var achievementStatuses = await BackgroundTaskHelper.RunBackgroundTask(() =>
+            var achievementStatuses = await QuitnicHelper.Instance.RunBackgroundTask(() =>
                 Task.FromResult(EvaluateAndUpdateAchievements(userId, achievements, unlockedAchievements, userProgress)),
                 ex => LogError($"Error processing achievements: {ex.Message}")
             );
